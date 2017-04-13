@@ -35,6 +35,7 @@
          <tr>
            <td width="90px" height="20px">
               <a href="test.php?testName=<?=$item ?>"><?= $item ?></a>
+              <a href="delete.php?id=<?=$item ?>">удалить</a>
             </td>
          </tr>
          <?php } ?>

@@ -2,11 +2,11 @@
     session_start();
     $error = "";
     function authorize() {
-        if ($_POST['loginAsGuest'] && !$_POST['login']) {
+        if (isset($_POST['loginAsGuest']) &&  !isset($_POST['login'])) {
             return 'Поле логин является обязательным';
         }
 
-        if ($_POST['loginAsGuest'] && $_POST['login']) {
+        if (isset($_POST['loginAsGuest']) && isset($_POST['login'])) {
             $_SESSION['user'] = $_POST['login'];
             $_SESSION['is_logged_in'] = false;
             header("Location: http://".$_SERVER[HTTP_HOST].str_replace('index.php', 'list.php', $_SERVER[REQUEST_URI]));
@@ -24,7 +24,7 @@
             return $error;
         }
 
-        if (!$authDB[$_POST['login']]) {
+        if (!isset($authDB[$_POST['login']])) {
             $error = 'Пользователь '.$_POST['login'].' не найден';
             return $error;
         }
@@ -36,8 +36,12 @@
 
         $_SESSION['user'] = $_POST['login'];
         $_SESSION['is_logged_in'] = true;
-        header("Location: http://".$_SERVER[HTTP_HOST].str_replace('index.php', 'list.php', $_SERVER[REQUEST_URI]));
-
+        if (strpos($_SERVER[REQUEST_URI], 'index.php') == false ) {
+            header("Location: http://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI]."/list.php");
+        } else {
+            header("Location: http://".$_SERVER[HTTP_HOST].str_replace('index.php', 'list.php', $_SERVER[REQUEST_URI]));
+        }
+        die();
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
